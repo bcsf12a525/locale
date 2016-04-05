@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+<script src="~/scripts/jquery-1.10.2.js"></script>
+
+<style>
+    #back_result {
+        padding: 10px;
+        width: 270px;
+        border: 1px solid silver;
+    }
+
+    #sea {
+        padding: 10px;
+        width: 270px;
+        border: 1px solid silver;
+    }
+
+
+
+    #label_search {
+        margin-left: 498px;
+        margin-top: 30px;
+    }
+
+    #button1 {
+        padding: 10px;
+    }
+
+    #pic {
+        vertical-align: middle;
+    }
+
+    #user {
+        margin: 3px;
+    }
+
+    #back_result {
+        position: absolute;
+    }
+
+    div.scrollingDiv {
+        overflow: scroll;
+    }
+
+    .DivToScroll {
+        background-color: #F5F5F5;
+        border: 1px solid #DDDDDD;
+        border-radius: 4px 0 4px 0;
+        color: #3B3C3E;
+        font-size: 12px;
+        font-weight: bold;
+        left: -1px;
+        padding: 10px 7px 5px;
+    }
+
+    .DivWithScroll {
+        height: 160px;
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+
+    img {
+        display: block;
+    }
+</style>
+<script>
+
+
+
+    $(function () {
+        $("#back_result").hide();
+
+        $("#back_result").on("click", ".reh", function () {
+           $(this).hide();
+         //  $("#sea").val($(this).text());
+           // $("#back_result").hide();
+            // $(".class1").not(this).css("background-color", "yellow");
+        });
+
+
+       $("#back_result").on("mouseover", ".reh", function () {
+           $(this).css("background-color", "highlight");
+          // $(".class1").not(this).css("background-color", "yellow");
+        });
+
+        $("#back_result").on("mouseout", ".reh", function () {
+            //alert("fiza");
+            $(this).css("background-color", "gainsboro");
+           //$(this).css("background-color", "white");
+        });
+
+        $("#sea").keyup(function () {
+            var show_h = "0";
+            var items = [];
+            var l1 = "";
+            var br = document.getElementById("#back_result");
+            jQuery.getJSON("/Account/Search_Movies", { "name": $("#sea").val() }, function (successResult) {
+                $.each(successResult, function (key, val) {
+                    //  $("#i").html()
+                    show_h = "1";
+                    var data = val;
+                    var arr = data.split(',');
+                    l1 = l1 + '<div class="reh"><img id="d" src="' + arr[1] + '" width=50 height=50  />' + '<label class="ldata">' + arr[0] + '</label></div>';
+                });
+                if (show_h == "0") {
+                    $("#back_result").hide();
+                }
+                else if (show_h == "1")
+                {
+                    $("#back_result").show();
+                }
+
+               $("#back_result").html(l1);
+                l1 = "";
+            });
+        });
+        $("#button1").click(function () {
+            alert("bil");
+            $("#back_result").hide();
+
+            //$('#display_movies').load('/Account/search_movies1',);
+            $.ajax({
+                url: '/Account/search_movies1',
+                type: 'POST',
+                // contentType: 'application/html',
+                data: { name1 : $("#sea").val() }
+            }).success(function(content) {
+                $('#display_movies_partial').html(content);
+            });
+        });
+
+
+    });
+</script>
+
+<img style="margin-left:100px ; float:left" src="~/images/1.jpg" />
+<p>biall</p>
+
+<div id="label_search">
+    <input id="sea" type="text" placeholder="Enter Your Movie Name" />
+    <button type="submit" id="button1">Search</button>
+
+    <br />
+    <div class="DivWithScroll" style="background-color:gainsboro" id="back_result">
+    </div>
+</div>
+
+
+<div id="display_movies_partial">
+
+</div>
+
+
+
